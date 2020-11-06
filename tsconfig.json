@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "sourceMap": true,
+        "target": "es2018",
+        "allowJs": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "declaration": true,
+        "declarationMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "typeRoots": [ "./node_modules/@types" ],
+        "lib": [
+            "es2018",
+            "esnext.asynciterable",
+        ],
+        "noImplicitAny": false,
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": ".",
+        "paths": {
+            "@tsutil/*": [
+                "packages/*/src"
+            ],
+        },
+    },
+    "include": [
+        "packages"
+    ],
+    "exclude": [
+        "packages/*/dist",
+    ]
+}

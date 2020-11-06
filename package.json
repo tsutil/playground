@@ -1,0 +1,23 @@
+{
+  "name": "playground",
+  "version": "0.1.0",
+  "description": "Set of general purpose utils and script playground",
+  "main": "dist/utils/index.js",
+  "scripts": {
+    "test": "echo 'no tests specified'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsutil/playground.git"
+  },
+  "keywords": [
+    "ts-utils",
+    "node-utils"
+  ],
+  "author": "tsutil",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tsutil/playground/issues"
+  },
+  "homepage": "https://github.com/tsutil/playground#readme"
+}
