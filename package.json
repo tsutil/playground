@@ -5,6 +5,7 @@
   "main": "dist/utils/index.js",
   "scripts": {
     "build": "tsc --build tsconfig.json",
+    "script": "node -r 'tsconfig-paths/register' packages/scripts/run.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
