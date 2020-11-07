@@ -24,7 +24,6 @@ Runtime:
 - pm2
 - ts-node
 - typescript
-- module-alias
 
 Application/webpage Packaging:
 - pkg
