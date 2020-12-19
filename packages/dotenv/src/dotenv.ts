@@ -1,4 +1,3 @@
-// @ts-check
 import * as fs from 'fs';
 import { join, dirname } from 'path';
 import * as dotenv from 'dotenv';

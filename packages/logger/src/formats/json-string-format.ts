@@ -1,8 +1,9 @@
+import fclone from 'fclone';
 import { format, Logform } from 'winston';
-import { serializableErrorReplacer } from '../serializable-error';
-import stringify from 'safe-json-stringify';
+import { beautifyErrorReplacer } from '../beautify-error-replacer';
 import type { LoggerOptions } from '../logger-interface';
 
 export function jsonStringFormat(opt?: LoggerOptions): Logform.Format {
-    return format.printf(entry => stringify(entry, serializableErrorReplacer ));
+    return format.printf(entry =>
+        JSON.stringify(fclone(entry), beautifyErrorReplacer ));
 }

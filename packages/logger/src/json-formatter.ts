@@ -1,4 +1,4 @@
-import toJson from 'safe-json-stringify';
+import fclone from 'fclone';
 
 export function jsonFormatter(prefix?: string) {
     return (logEntry: { [key: string]: any }) => {
@@ -7,7 +7,8 @@ export function jsonFormatter(prefix?: string) {
             logEntry.prefix = logEntry.prefix || prefix;
         }
         try {
-            return toJson(logEntry);
+            const clone = fclone(logEntry);
+            return JSON.stringify(clone);
         } catch (e) {
             console.error(e);
             return logEntry.msg;
