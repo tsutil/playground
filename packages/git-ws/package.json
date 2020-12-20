@@ -1,0 +1,15 @@
+{
+    "name": "@tsutil/git-ws",
+    "version": "0.1.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "dependencies": {
+        "@octokit/rest": "18.0.12",
+        "isomorphic-git": "1.8.0"
+    },
+    "license": "ISC"
+}
