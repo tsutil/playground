@@ -1,3 +1,7 @@
+// see: https://isomorphic-git.org/docs/en
+// see: https://github.com/isomorphic-git/isomorphic-git
+// see: https://docs.github.com/en/free-pro-team@latest/rest/reference/repos
+// see: https://octokit.github.io/rest.js/v18#authentication
 import 'tsconfig-paths/register';
 import '@tsutil/dotenv';
 import fs from 'fs';
@@ -8,10 +12,10 @@ import { dump, sleep } from '@tsutil/utils';
 import { createLogger } from '@tsutil/logger';
 import { Octokit } from '@octokit/rest';
 import { mongo } from '@tsutil/mongo';
+import { collections } from './collections';
 
-const REPO_COLLECTION = ['git', 'repo'];
-const WORKSPACE_COLLECTION = ['git', 'workspace'];
 const logger = createLogger('github');
+
 module.parent == null && main().catch(console.error).then(() => mongo.disconnect());
 async function main() {
     if (typeof process.env.GITHUB_ACCESS_TOKEN !== 'string') {
@@ -23,6 +27,8 @@ async function main() {
     await query();
 
 }
+// todo: cursor pagination for octokit
+// todo: fetch https://isomorphic-git.org/docs/en/fetch
 
 async function fetchRepos() {
     const octokit = new Octokit({
@@ -37,7 +43,7 @@ async function fetchRepos() {
     // octokit.repos.p
     logger.info(`${res.length} items found`);
     const repos = res.map(mapRepo);
-    await mongo.upsert(REPO_COLLECTION, repos);
+    await mongo.upsert(collections.REPOSITORY, repos);
     // await dump.json(res, 'github-response.json');
 }
 
@@ -61,12 +67,12 @@ async function query() {
         // {$sortByCount: '$language'},
         { $sort: { pushed_at: -1, updated_at: -1 }}
     ];
-    const res = await mongo.findAll(REPO_COLLECTION, aggr);
+    const res = await mongo.findAll(collections.REPOSITORY, aggr);
     await dump.json(res, 'mongo-query-result.json');
 }
 
 async function transform() {
-    const cursor = await mongo.find(REPO_COLLECTION, {});
+    const cursor = await mongo.find(collections.REPOSITORY, {});
     for await (const dto of cursor) {
         const repo = mapRepo(dto);
         await mongo.upsert(['git', 'repo2'], repo);
@@ -76,13 +82,13 @@ async function transform() {
 async function cloneAll() {
     const basePath = process.env.WORKSPACE_ROOT_DIRECTORY || process.cwd();
     const filter = {};
-    const repos = await mongo.find(REPO_COLLECTION, filter);
+    const repos = await mongo.find(collections.REPOSITORY, filter);
     let cloned = 0;
 
     for await (const repo of repos) {
         const { name, full_name, git_url, clone_url, description } = repo;
         const dir = path.join(basePath, name);
-        const existing = await mongo.findOne(WORKSPACE_COLLECTION, { _id: full_name });
+        const existing = await mongo.findOne(collections.WORKSPACE, { _id: full_name });
         if (existing != null) {
             logger.info(`${name} already clonned`);
             continue;
@@ -106,7 +112,7 @@ async function cloneAll() {
             git_url,
             clone_url,
         };
-        await mongo.upsert(WORKSPACE_COLLECTION, workspace);
+        await mongo.upsert(collections.WORKSPACE, workspace);
         // const dir = path.join(basePath, name);
         // git.clone({ fs, http, dir, url: 'https://github.com/isomorphic-git/lightning-fs' }).then(console.log);
     }
